@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { magic } from '@lib/magic'
 import Feed from '@components/mvp/Feed'
 import LoginHero from '@components/mvp/LoginHero'
 import { auth, functions, queryFirestore } from '@lib/firebase'
@@ -27,17 +26,7 @@ function HomePage() {
   useEffect(() => {
     // On mount, we check if a user is logged in.
     // If so, we'll auth with Firebase the authenticated user's profile.
-    magic.user.isLoggedIn().then(async (magicIsLoggedIn) => {
-      if (magicIsLoggedIn) {
-        const didToken = await magic.user.getIdToken()
-        const authFunc = functions.httpsCallable(authRoute)
-        /* DID token is passed into the auth callable function */
-        let result = (await authFunc({ didToken, twitterMetadata })).data
-        /* Firebase user access token is used to authenticate */
-        await auth.signInWithCustomToken(result.token)
-        setAuthed(true)
-      }
-    })
+    console.log('auth wat')
   }, [])
 
   // still need to handle no posts

@@ -2,10 +2,8 @@
 import { Fragment, useContext } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon, LogoutIcon } from '@heroicons/react/outline'
-import { PlusSmIcon } from '@heroicons/react/solid'
 import { UserContext } from '@lib/context'
 import { useStore } from '@lib/store'
-import { magic } from '@lib/magic'
 import { auth } from '@lib/firebase'
 import Image from 'next/image'
 import { useStores } from '@lib/root-store-context'
@@ -42,7 +40,6 @@ export default function Navbar() {
     reset()
     storage.removeItem(ROOT_STATE_STORAGE_KEY)
     setShowFeed(false)
-    await magic.user.logout()
     await auth.signOut()
   }
   return (
