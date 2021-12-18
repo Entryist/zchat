@@ -61,7 +61,7 @@ export default function Navbar() {
                   </Disclosure.Button>
                 </div>
                 <div className='flex-shrink-0 flex items-center py-3'>
-                  <div className='block lg:hidden h-8 w-8 relative'>
+                  {/* <div className='block lg:hidden h-8 w-8 relative'>
                     <Image
                       src='/aclogo512.png'
                       alt='Arcade City'
@@ -76,7 +76,7 @@ export default function Navbar() {
                       layout='fill'
                       objectFit='contain'
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <div className='hidden md:ml-6 md:flex md:items-center md:space-x-4'>
                   {navigation.map((item) => (

@@ -5,7 +5,7 @@ import { UserContext } from '@lib/context'
 import { useUserData } from '@lib/hooks'
 import { Toaster } from 'react-hot-toast'
 import Head from 'next/head'
-import ArcadeMap from '@components/mvp/ArcadeMap'
+import Background from '@components/mvp/Background'
 import { useStore } from '@lib/store'
 import { useEffect, useState } from 'react'
 import { RootStore, setupRootStore } from '@lib/mst'
@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps }) {
             <Navbar />
             <Component {...pageProps} />
             <Toaster />
-            {/* <ArcadeMap /> */}
+            <Background />
           </UserContext.Provider>
         </RootStoreProvider>
       )}
