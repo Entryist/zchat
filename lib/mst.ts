@@ -17,7 +17,7 @@ export const EventModel = types.model('Event').props({
 
 export interface Event extends Instance<typeof EventModel> {}
 
-export const ROOT_STATE_STORAGE_KEY = 'root10'
+export const ROOT_STATE_STORAGE_KEY = 'root11'
 
 export const RootStoreModel = types
   .model({
