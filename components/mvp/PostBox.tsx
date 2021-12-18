@@ -42,6 +42,7 @@ export default function PostBox() {
         </div>
       </div>
       <div className='min-w-0 flex-1'>
+        <p className='text-white mb-4'>{publicKey}</p>
         <form onSubmit={handleSubmit(submitPost)} className='relative'>
           <div className='border border-gray-300 rounded-lg shadow-sm overflow-hidden focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500'>
             <label htmlFor='comment' className='sr-only'>

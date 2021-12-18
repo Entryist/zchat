@@ -7,7 +7,18 @@ const Tron =
   typeof window !== 'undefined' ? require('reactotron-react-js').default : { configure: () => {} }
 // import Tron from 'reactotron-react-js'
 
-export const ROOT_STATE_STORAGE_KEY = 'root7'
+export const EventModel = types.model('Event').props({
+  id: types.identifier,
+  createdAt: types.Date,
+  content: types.string,
+  sig: types.string,
+  kind: types.number,
+  pubkey: types.string,
+})
+
+export interface Event extends Instance<typeof EventModel> {}
+
+export const ROOT_STATE_STORAGE_KEY = 'root8'
 
 export const RootStoreModel = types
   .model({
@@ -17,16 +28,23 @@ export const RootStoreModel = types
     coords: types.frozen(),
     countryCode: types.maybeNull(types.string),
     showFeed: false,
+    events: types.map(EventModel),
   })
   .actions((self) => ({
     createPost: async (text: string): Promise<void> =>
       await actions.createPost(self as RootStore, text),
+    subscribeToUser: async (pubkey: string): Promise<any> =>
+      await actions.subscribeToUser(self as RootStore, pubkey),
     login: async (): Promise<void> => await actions.login(self as RootStore),
     setPublicKey(key: string) {
       self.publicKey = key
     },
     setPrivateKey(key: string) {
       self.privateKey = key
+    },
+
+    setEvent(event: Event) {
+      self.events?.put(event)
     },
 
     seeNearby: async (): Promise<void> => await actions.seeNearby(self as RootStore),
@@ -42,9 +60,9 @@ export const RootStoreModel = types
     setShowFeed(show: boolean) {
       self.showFeed = show
     },
-    setUser(user: TwitterMetadata) {
-      self.user = user
-    },
+    // setUser(user: TwitterMetadata) {
+    //   self.user = user
+    // },
     reset() {
       // self.user = null
       // self.city = null
@@ -54,17 +72,21 @@ export const RootStoreModel = types
     },
   }))
   .views((self) => ({
-    get postsArray(): Post[] {
-      return []
+    get postsArray(): any[] {
+      const posts = Array.from(self.events.values()).sort((p1, p2) =>
+        p1.createdAt > p2.createdAt ? -1 : 1
+      )
+      console.log(posts)
+      return posts
       // const posts = Array.from(self.posts.values())
       // return posts
       //   .filter((p) => !!p.twitterMetadata)
-      //   .sort((p1, p2) => (p1.createdAt > p2.createdAt ? -1 : 1))
+      //
     },
   }))
 
-export interface Post extends Instance<typeof PostModel> {}
-export interface TwitterMetadata extends Instance<typeof TwitterMetadataModel> {}
+// export interface Post extends Instance<typeof PostModel> {}
+// export interface TwitterMetadata extends Instance<typeof TwitterMetadataModel> {}
 export interface RootStore extends Instance<typeof RootStoreModel> {}
 
 export async function setupRootStore() {
@@ -87,24 +109,24 @@ export async function setupRootStore() {
     // __DEV__ && console.tron.error(e.message, null)
   }
 
-  // if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-  //   Tron.configure({
-  //     name: 'Ride',
-  //     port: 9090,
-  //   })
+  if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+    Tron.configure({
+      name: 'Z Chat',
+      port: 9090,
+    })
 
-  //   // ignore some chatty `mobx-state-tree` actions
-  //   const RX = /postProcessSnapshot|@APPLY_SNAPSHOT/
+    // ignore some chatty `mobx-state-tree` actions
+    const RX = /postProcessSnapshot|@APPLY_SNAPSHOT/
 
-  //   // hookup mobx-state-tree middleware
-  //   Tron.use(
-  //     mst({
-  //       filter: (event) => RX.test(event.name) === false,
-  //     })
-  //   )
-  //   // Tron.connect()
-  //   // Tron.trackMstNode(rootStore)
-  // }
+    // hookup mobx-state-tree middleware
+    Tron.use(
+      mst({
+        filter: (event) => RX.test(event.name) === false,
+      })
+    )
+    Tron.connect()
+    Tron.trackMstNode(rootStore)
+  }
   // reactotron logging
   // if (__DEV__) {
   // env.reactotron.setRootStore(rootStore, data)
@@ -129,4 +151,16 @@ export async function setupRootStore() {
   })
 
   return rootStore
+}
+
+export const normalizeEvent = (event: any) => {
+  const normalized: Event = EventModel.create({
+    id: event.id,
+    createdAt: event.created_at,
+    content: event.content,
+    sig: event.sig,
+    kind: event.kind,
+    pubkey: event.pubkey,
+  })
+  return normalized
 }

@@ -4,12 +4,17 @@ import { useState } from 'react'
 import Onboarding from './Onboarding'
 import Post from './Post'
 import { observer } from 'mobx-react-lite'
+import { values } from 'mobx'
 
 function Feed() {
   const [onboarded, setOnboarded] = useState(true)
   const posts = useStores().postsArray
+  // console.log('posts:', posts)
   const city = useStores().city
   const publickey = useStores().publicKey
+  // const events = useStores().events
+  // const posts = events ? values(events) : []
+  // console.log('posts:', posts)
 
   return (
     <>

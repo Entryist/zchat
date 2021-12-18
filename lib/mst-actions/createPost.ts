@@ -15,9 +15,10 @@ export const createPost = async (self: RootStore, text: string) => {
   let event = {
     pubkey,
     created_at: Math.floor(Date.now() / 1000),
-    kind: 4,
+    kind: 1, // 4,
     tags: [['p', pubkey]],
-    content: ciphertext + '?iv=' + iv,
+    content: text,
+    // content: ciphertext + '?iv=' + iv,
     id: '',
   }
 
