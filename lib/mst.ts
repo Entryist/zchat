@@ -5,7 +5,6 @@ import * as actions from './mst-actions'
 
 const Tron =
   typeof window !== 'undefined' ? require('reactotron-react-js').default : { configure: () => {} }
-// import Tron from 'reactotron-react-js'
 
 export const EventModel = types.model('Event').props({
   id: types.identifier,
@@ -24,10 +23,6 @@ export const RootStoreModel = types
   .model({
     publicKey: '',
     privateKey: '',
-    city: types.maybeNull(types.string),
-    coords: types.frozen(),
-    countryCode: types.maybeNull(types.string),
-    showFeed: false,
     events: types.map(EventModel),
   })
   .actions((self) => ({
@@ -42,42 +37,15 @@ export const RootStoreModel = types
     setPrivateKey(key: string) {
       self.privateKey = key
     },
-
     setEvent(event: Event) {
       self.events?.put(event)
-    },
-
-    setCity(city: string) {
-      self.city = city
-    },
-    setCoords(coords: any) {
-      self.coords = coords
-    },
-    setCountryCode(code: string) {
-      self.countryCode = code
-    },
-    setShowFeed(show: boolean) {
-      self.showFeed = show
-    },
-    // setUser(user: TwitterMetadata) {
-    //   self.user = user
-    // },
-    reset() {
-      // self.user = null
-      // self.city = null
-      // self.coords = null
-      // self.countryCode = null
-      // self.posts = undefined
     },
   }))
   .views((self) => ({
     get postsArray(): any[] {
-      const posts = Array.from(self.events.values())
-        // .filter(
-        //   (p) => p.pubkey !== '6d07ec2d8c4920e0aa561748febd155900242d487c02deb09380087123b287ee'
-        // )
-
-        .sort((p1, p2) => (p1.createdAt > p2.createdAt ? -1 : 1))
+      const posts = Array.from(self.events.values()).sort((p1, p2) =>
+        p1.createdAt > p2.createdAt ? -1 : 1
+      )
       return posts
     },
   }))
@@ -87,9 +55,7 @@ export interface RootStore extends Instance<typeof RootStoreModel> {}
 export async function setupRootStore() {
   let rootStore: RootStore
   let data: any
-  // prepare the environment that will be associated with the RootStore.
-  // const env = await createEnvironment()
-  rootStore = RootStoreModel.create({}) // , env
+  rootStore = RootStoreModel.create({})
   try {
     // load data from storage
     data = (await storage.getItem(ROOT_STATE_STORAGE_KEY)) || {}
@@ -97,11 +63,8 @@ export async function setupRootStore() {
   } catch (e) {
     // if there's any problems loading, then let's at least fallback to an empty state
     // instead of crashing.
-    rootStore = RootStoreModel.create({}) // , env
-
-    // but please inform us what happened
+    rootStore = RootStoreModel.create({})
     console.log(e)
-    // __DEV__ && console.tron.error(e.message, null)
   }
 
   if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
@@ -122,27 +85,10 @@ export async function setupRootStore() {
     Tron.connect()
     Tron.trackMstNode(rootStore)
   }
-  // reactotron logging
-  // if (__DEV__) {
-  // env.reactotron.setRootStore(rootStore, data)
-  // }
-
-  let lastSaved = new Date()
-  let secondsSinceLastSent: number | null = null
-  let SAVE_INTERVAL = 5
 
   // track changes & save to storage
   onSnapshot(rootStore, (snapshot) => {
     storage.setItem(ROOT_STATE_STORAGE_KEY, JSON.stringify(snapshot))
-    // const now = new Date()
-    // const dif = now.getTime() - lastSaved.getTime()
-    // secondsSinceLastSent = dif / 1000
-
-    // if (!lastSaved || secondsSinceLastSent > SAVE_INTERVAL) {
-    //   lastSaved = new Date()
-    //   storage.setItem(ROOT_STATE_STORAGE_KEY, JSON.stringify(snapshot))
-    //   console.log('Saved', lastSaved)
-    // }
   })
 
   return rootStore
