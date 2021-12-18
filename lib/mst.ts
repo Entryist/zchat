@@ -73,20 +73,16 @@ export const RootStoreModel = types
   }))
   .views((self) => ({
     get postsArray(): any[] {
-      const posts = Array.from(self.events.values()).sort((p1, p2) =>
-        p1.createdAt > p2.createdAt ? -1 : 1
-      )
-      console.log(posts)
+      const posts = Array.from(self.events.values())
+        .filter(
+          (p) => p.pubkey !== '6d07ec2d8c4920e0aa561748febd155900242d487c02deb09380087123b287ee'
+        )
+
+        .sort((p1, p2) => (p1.createdAt > p2.createdAt ? -1 : 1))
       return posts
-      // const posts = Array.from(self.posts.values())
-      // return posts
-      //   .filter((p) => !!p.twitterMetadata)
-      //
     },
   }))
 
-// export interface Post extends Instance<typeof PostModel> {}
-// export interface TwitterMetadata extends Instance<typeof TwitterMetadataModel> {}
 export interface RootStore extends Instance<typeof RootStoreModel> {}
 
 export async function setupRootStore() {

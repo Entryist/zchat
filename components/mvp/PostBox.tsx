@@ -22,12 +22,7 @@ export default function PostBox() {
   const { isValid, isDirty } = formState
 
   const submitPost = async ({ content }) => {
-    console.log(content)
-
     await createPost(content)
-
-    // console.log('auth.currentUser.uid:', auth.currentUser.uid)
-    // console.log('postId:', docRef.id)
 
     reset({ content: '' })
 

@@ -9,6 +9,7 @@ import Image from 'next/image'
 import { useStores } from '@lib/root-store-context'
 import storage from 'localforage'
 import { ROOT_STATE_STORAGE_KEY } from '@lib/mst'
+import { pool } from '@lib/nostr'
 
 const navigation = [
   // { name: 'Dashboard', href: '#', current: true },
@@ -29,18 +30,18 @@ function classNames(...classes) {
 export default function Navbar() {
   const { user, username } = useContext(UserContext)
   const twitterMetadata = useStore((s) => s.oauthdata)
-  const setoauthdata = useStore((s) => s.setoauthdata)
-  const setUser = useStores().setUser
+  const setPublicKey = useStores().setPublicKey
+  const setPrivateKey = useStores().setPrivateKey
   const setShowFeed = useStores().setShowFeed
   const reset = useStores().reset
-  const authed = !!useStores().user
+  const authed = !!useStores().publicKey
   const handleLogout = async () => {
-    setoauthdata(null)
-    setUser(null)
+    setPublicKey('')
+    setPrivateKey('')
     reset()
+    pool.unsub()
     storage.removeItem(ROOT_STATE_STORAGE_KEY)
-    setShowFeed(false)
-    await auth.signOut()
+    console.log('logged out')
   }
   return (
     <Disclosure as='nav' className='bg-transparent' style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
