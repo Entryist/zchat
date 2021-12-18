@@ -10,6 +10,7 @@ import { UserContext } from '@lib/context'
 
 export default function PostBox() {
   const publicKey = useStores().publicKey
+  const createPost = useStores().createPost
 
   // useStore((s) => s.oauthdata)
   // const geolocation = useStore((s) => s.geolocation)
@@ -22,6 +23,8 @@ export default function PostBox() {
 
   const submitPost = async ({ content }) => {
     console.log(content)
+
+    await createPost(content)
 
     // console.log('auth.currentUser.uid:', auth.currentUser.uid)
     // console.log('postId:', docRef.id)

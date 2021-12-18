@@ -19,6 +19,8 @@ export const RootStoreModel = types
     showFeed: false,
   })
   .actions((self) => ({
+    createPost: async (text: string): Promise<void> =>
+      await actions.createPost(self as RootStore, text),
     login: async (): Promise<void> => await actions.login(self as RootStore),
     setPublicKey(key: string) {
       self.publicKey = key
