@@ -37,7 +37,8 @@ export default function ArcadeMap() {
 
     // center the camera to RJ
     mapView.lookAt({
-      target: new harp.GeoCoordinates(-22.931363110413354, -43.183705305311655),
+      // target: new harp.GeoCoordinates(-22.931363110413354, -43.183705305311655),
+      target: new harp.GeoCoordinates(30.2672, -97.7431),
       zoomLevel: 18,
       tilt: 40,
     })
