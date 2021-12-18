@@ -1,4 +1,5 @@
 import PostBox from '@components/mvp/PostBox'
+import FollowBox from '@components/mvp/FollowBox'
 import { useStores } from '@lib/root-store-context'
 import { useState } from 'react'
 import Onboarding from './Onboarding'
@@ -19,6 +20,7 @@ function Feed() {
   return (
     <>
       <div className='flex justify-center flex-col items-center'>
+        <FollowBox />
         {onboarded ? <PostBox /> : <Onboarding />}
 
         <div

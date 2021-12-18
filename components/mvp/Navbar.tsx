@@ -9,6 +9,7 @@ import { useStores } from '@lib/root-store-context'
 import storage from 'localforage'
 import { ROOT_STATE_STORAGE_KEY } from '@lib/mst'
 import { pool } from '@lib/nostr'
+import { observer } from 'mobx-react-lite'
 
 const navigation = [
   // { name: 'Dashboard', href: '#', current: true },
@@ -26,7 +27,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Navbar() {
+function Navbar() {
   const { user, username } = useContext(UserContext)
   const twitterMetadata = useStore((s) => s.oauthdata)
   const setPublicKey = useStores().setPublicKey
@@ -228,3 +229,5 @@ export default function Navbar() {
     </Disclosure>
   )
 }
+
+export default observer(Navbar)
