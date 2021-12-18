@@ -7,47 +7,46 @@ const Tron =
   typeof window !== 'undefined' ? require('reactotron-react-js').default : { configure: () => {} }
 // import Tron from 'reactotron-react-js'
 
-export const ROOT_STATE_STORAGE_KEY = 'root7'
-
-export const TwitterMetadataModel = types.model({
-  email: '',
-  emailVerified: false,
-  locale: '',
-  name: '',
-  preferredUsername: '',
-  profile: '',
-  sub: '',
-})
-
-export const GeolocationModel = types.model({
-  latitude: 0.0,
-  countryCode: '',
-  longitude: 0.0,
-  city: '',
-})
-
-export const PostModel = types.model({
+export const EventModel = types.model('Event').props({
   id: types.identifier,
-  content: types.optional(types.string, ''),
-  geolocation: GeolocationModel,
-  twitterMetadata: types.maybeNull(TwitterMetadataModel),
-  createdAt: types.number,
+  createdAt: types.Date,
+  content: types.string,
+  sig: types.string,
+  kind: types.number,
+  pubkey: types.string,
 })
+
+export interface Event extends Instance<typeof EventModel> {}
+
+export const ROOT_STATE_STORAGE_KEY = 'root8'
 
 export const RootStoreModel = types
   .model({
+    publicKey: '',
+    privateKey: '',
     city: types.maybeNull(types.string),
     coords: types.frozen(),
     countryCode: types.maybeNull(types.string),
-    posts: types.map(PostModel),
-    user: types.maybeNull(TwitterMetadataModel),
     showFeed: false,
+    events: types.map(EventModel),
   })
   .actions((self) => ({
-    seeNearby: async (): Promise<void> => await actions.seeNearby(self as RootStore),
-    addPost(post: Post) {
-      self.posts.set(post.id, PostModel.create(post))
+    createPost: async (text: string): Promise<void> =>
+      await actions.createPost(self as RootStore, text),
+    subscribeToUser: async (pubkey: string): Promise<any> =>
+      await actions.subscribeToUser(self as RootStore, pubkey),
+    login: async (): Promise<void> => await actions.login(self as RootStore),
+    setPublicKey(key: string) {
+      self.publicKey = key
     },
+    setPrivateKey(key: string) {
+      self.privateKey = key
+    },
+
+    setEvent(event: Event) {
+      self.events?.put(event)
+    },
+
     setCity(city: string) {
       self.city = city
     },
@@ -60,28 +59,29 @@ export const RootStoreModel = types
     setShowFeed(show: boolean) {
       self.showFeed = show
     },
-    setUser(user: TwitterMetadata) {
-      self.user = user
-    },
+    // setUser(user: TwitterMetadata) {
+    //   self.user = user
+    // },
     reset() {
-      self.user = null
+      // self.user = null
       // self.city = null
       // self.coords = null
       // self.countryCode = null
-      self.posts = undefined
+      // self.posts = undefined
     },
   }))
   .views((self) => ({
-    get postsArray(): Post[] {
-      const posts = Array.from(self.posts.values())
-      return posts
-        .filter((p) => !!p.twitterMetadata)
+    get postsArray(): any[] {
+      const posts = Array.from(self.events.values())
+        .filter(
+          (p) => p.pubkey !== '6d07ec2d8c4920e0aa561748febd155900242d487c02deb09380087123b287ee'
+        )
+
         .sort((p1, p2) => (p1.createdAt > p2.createdAt ? -1 : 1))
+      return posts
     },
   }))
 
-export interface Post extends Instance<typeof PostModel> {}
-export interface TwitterMetadata extends Instance<typeof TwitterMetadataModel> {}
 export interface RootStore extends Instance<typeof RootStoreModel> {}
 
 export async function setupRootStore() {
@@ -106,7 +106,7 @@ export async function setupRootStore() {
 
   if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
     Tron.configure({
-      name: 'Ride',
+      name: 'Z Chat',
       port: 9090,
     })
 
@@ -146,4 +146,16 @@ export async function setupRootStore() {
   })
 
   return rootStore
+}
+
+export const normalizeEvent = (event: any) => {
+  const normalized: Event = EventModel.create({
+    id: event.id,
+    createdAt: event.created_at,
+    content: event.content,
+    sig: event.sig,
+    kind: event.kind,
+    pubkey: event.pubkey,
+  })
+  return normalized
 }

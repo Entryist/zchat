@@ -1,47 +1,39 @@
-import { useEffect, useState } from 'react'
-import { magic } from '@lib/magic'
+import { useEffect } from 'react'
 import Feed from '@components/mvp/Feed'
 import LoginHero from '@components/mvp/LoginHero'
-import { auth, functions, queryFirestore } from '@lib/firebase'
-import { useStore } from '@lib/store'
 import { useStores } from '@lib/root-store-context'
 import { observer } from 'mobx-react-lite'
+import { pool } from '@lib/nostr'
 
-const authRoute = process.env.NODE_ENV === 'production' ? 'auth' : 'authDev'
+const relays = ['wss://freedom-relay.herokuapp.com/ws']
 
 function HomePage() {
-  const [authed, setAuthed] = useState(false)
-  const user = useStores().user
-  const posts = useStores().posts
-  const twitterMetadata = useStore((s) => s.oauthdata)
-  const store = useStores()
-  const lat = useStores().coords?.lat
-  const lng = useStores().coords?.lng
-  const showFeed = useStores().showFeed
+  const publicKey = useStores().publicKey
+  const privkey = useStores().privateKey
+  const subscribeToUser = useStores().subscribeToUser
 
   useEffect(() => {
-    if (!authed || !lat || !lng) return
-    queryFirestore({ lat, lng }, store)
-  }, [authed, lat, lng])
+    if (!privkey) return
 
-  useEffect(() => {
-    // On mount, we check if a user is logged in.
-    // If so, we'll auth with Firebase the authenticated user's profile.
-    magic.user.isLoggedIn().then(async (magicIsLoggedIn) => {
-      if (magicIsLoggedIn) {
-        const didToken = await magic.user.getIdToken()
-        const authFunc = functions.httpsCallable(authRoute)
-        /* DID token is passed into the auth callable function */
-        let result = (await authFunc({ didToken, twitterMetadata })).data
-        /* Firebase user access token is used to authenticate */
-        await auth.signInWithCustomToken(result.token)
-        setAuthed(true)
-      }
+    console.log('Priv key found. Connecting to relay')
+
+    pool.setPrivateKey(privkey)
+
+    relays.forEach((relay) => {
+      pool.addRelay(relay)
     })
-  }, [])
 
-  // still need to handle no posts
-  return showFeed ? <Feed /> : <LoginHero />
+    pool.onNotice((notice, relay) => {
+      console.log(`Relay ${relay.url} says: ${notice}`)
+    })
+
+    subscribeToUser('645981d1d595fb60bbfd6539a82a8808f2a17e95c94694196d7ba81a587d659a')
+    subscribeToUser('e5b6b45fbe40c891de636679cf71c00d26f95a9c9a093c78adf760ef265d42f5')
+    subscribeToUser('778940b4cdf10088f95427e25f6d913a1467b0921d2bd23479d8ff5e4107a345')
+    // subscribeToUser('6d07ec2d8c4920e0aa561748febd155900242d487c02deb09380087123b287ee')
+  }, [privkey])
+
+  return !!publicKey ? <Feed /> : <LoginHero />
 }
 
 export default observer(HomePage)

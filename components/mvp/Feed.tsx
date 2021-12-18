@@ -4,11 +4,17 @@ import { useState } from 'react'
 import Onboarding from './Onboarding'
 import Post from './Post'
 import { observer } from 'mobx-react-lite'
+import { values } from 'mobx'
 
 function Feed() {
   const [onboarded, setOnboarded] = useState(true)
   const posts = useStores().postsArray
+  // console.log('posts:', posts)
   const city = useStores().city
+  const publickey = useStores().publicKey
+  // const events = useStores().events
+  // const posts = events ? values(events) : []
+  // console.log('posts:', posts)
 
   return (
     <>
@@ -21,13 +27,8 @@ function Feed() {
         >
           {posts.length === 0 && (
             <>
-              <p className='mb-4'>
-                There are no posts near <strong>{city}</strong>. You can make the first post!
-              </p>
-              <p className='mb-8'>
-                Introduce yourself and say if you are re looking to give or take rides, or any other
-                service.
-              </p>
+              <p className='mb-8'>Welcome {publickey}!</p>
+              <p className='mb-8'>Make a post!</p>
             </>
           )}
           <ul role='list' className='-mb-8'>

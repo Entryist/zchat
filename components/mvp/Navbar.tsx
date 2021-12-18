@@ -2,15 +2,13 @@
 import { Fragment, useContext } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon, LogoutIcon } from '@heroicons/react/outline'
-import { PlusSmIcon } from '@heroicons/react/solid'
 import { UserContext } from '@lib/context'
 import { useStore } from '@lib/store'
-import { magic } from '@lib/magic'
-import { auth } from '@lib/firebase'
 import Image from 'next/image'
 import { useStores } from '@lib/root-store-context'
 import storage from 'localforage'
 import { ROOT_STATE_STORAGE_KEY } from '@lib/mst'
+import { pool } from '@lib/nostr'
 
 const navigation = [
   // { name: 'Dashboard', href: '#', current: true },
@@ -31,19 +29,18 @@ function classNames(...classes) {
 export default function Navbar() {
   const { user, username } = useContext(UserContext)
   const twitterMetadata = useStore((s) => s.oauthdata)
-  const setoauthdata = useStore((s) => s.setoauthdata)
-  const setUser = useStores().setUser
+  const setPublicKey = useStores().setPublicKey
+  const setPrivateKey = useStores().setPrivateKey
   const setShowFeed = useStores().setShowFeed
   const reset = useStores().reset
-  const authed = !!useStores().user
+  const authed = !!useStores().publicKey
   const handleLogout = async () => {
-    setoauthdata(null)
-    setUser(null)
+    setPublicKey('')
+    setPrivateKey('')
     reset()
+    pool.unsub()
     storage.removeItem(ROOT_STATE_STORAGE_KEY)
-    setShowFeed(false)
-    await magic.user.logout()
-    await auth.signOut()
+    console.log('logged out')
   }
   return (
     <Disclosure as='nav' className='bg-transparent' style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
@@ -64,7 +61,7 @@ export default function Navbar() {
                   </Disclosure.Button>
                 </div>
                 <div className='flex-shrink-0 flex items-center py-3'>
-                  <div className='block lg:hidden h-8 w-8 relative'>
+                  {/* <div className='block lg:hidden h-8 w-8 relative'>
                     <Image
                       src='/aclogo512.png'
                       alt='Arcade City'
@@ -79,7 +76,7 @@ export default function Navbar() {
                       layout='fill'
                       objectFit='contain'
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <div className='hidden md:ml-6 md:flex md:items-center md:space-x-4'>
                   {navigation.map((item) => (
