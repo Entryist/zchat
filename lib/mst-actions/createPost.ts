@@ -1,11 +1,13 @@
 import { RootStore } from '@lib/mst'
 import { encrypt, decrypt } from '@lib/nip04'
-import { getEventHash } from '@lib/nostr-tools'
+import { pool } from '@lib/nostr'
+import { getEventHash } from 'nostr-tools'
 
 export const createPost = async (self: RootStore, text: string) => {
   if (text.length === 0) return
 
   const pubkey = self.publicKey
+  const privkey = self.privateKey
 
   let [ciphertext, iv] = encrypt(self.privateKey, pubkey, text)
 
@@ -41,5 +43,7 @@ export const createPost = async (self: RootStore, text: string) => {
 
   // messages.push(message)
   // LocalStorage.set(lsKey, messages)
-  // pool.publish(event)
+
+  pool.publish(event)
+  console.log('published?')
 }

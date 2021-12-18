@@ -87,24 +87,24 @@ export async function setupRootStore() {
     // __DEV__ && console.tron.error(e.message, null)
   }
 
-  if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-    Tron.configure({
-      name: 'Ride',
-      port: 9090,
-    })
+  // if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+  //   Tron.configure({
+  //     name: 'Ride',
+  //     port: 9090,
+  //   })
 
-    // ignore some chatty `mobx-state-tree` actions
-    const RX = /postProcessSnapshot|@APPLY_SNAPSHOT/
+  //   // ignore some chatty `mobx-state-tree` actions
+  //   const RX = /postProcessSnapshot|@APPLY_SNAPSHOT/
 
-    // hookup mobx-state-tree middleware
-    Tron.use(
-      mst({
-        filter: (event) => RX.test(event.name) === false,
-      })
-    )
-    Tron.connect()
-    Tron.trackMstNode(rootStore)
-  }
+  //   // hookup mobx-state-tree middleware
+  //   Tron.use(
+  //     mst({
+  //       filter: (event) => RX.test(event.name) === false,
+  //     })
+  //   )
+  //   // Tron.connect()
+  //   // Tron.trackMstNode(rootStore)
+  // }
   // reactotron logging
   // if (__DEV__) {
   // env.reactotron.setRootStore(rootStore, data)
