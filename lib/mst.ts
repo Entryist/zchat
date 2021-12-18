@@ -47,7 +47,6 @@ export const RootStoreModel = types
       self.events?.put(event)
     },
 
-    seeNearby: async (): Promise<void> => await actions.seeNearby(self as RootStore),
     setCity(city: string) {
       self.city = city
     },

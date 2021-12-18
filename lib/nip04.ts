@@ -23,6 +23,7 @@ export function decrypt(privkey, pubkey, ciphertext, iv) {
     Buffer.from(iv, 'base64')
   )
   let decryptedMessage = decipher.update(ciphertext, 'base64')
+  // @ts-ignore
   decryptedMessage += decipher.final('utf8')
 
   return decryptedMessage

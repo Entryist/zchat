@@ -1,19 +1,15 @@
 import '@styles/globals.css'
 import 'tailwindcss/tailwind.css'
 import Navbar from '@components/mvp/Navbar'
-import { UserContext } from '@lib/context'
-import { useUserData } from '@lib/hooks'
 import { Toaster } from 'react-hot-toast'
 import Head from 'next/head'
 import Background from '@components/mvp/Background'
-import { useStore } from '@lib/store'
 import { useEffect, useState } from 'react'
 import { RootStore, setupRootStore } from '@lib/mst'
 import { RootStoreProvider } from '@lib/root-store-context'
 import Metatags from '@components/Metatags'
 
 function MyApp({ Component, pageProps }) {
-  const userData = useUserData()
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
 
   useEffect(() => {
@@ -42,12 +38,10 @@ function MyApp({ Component, pageProps }) {
       <Metatags />
       {!!rootStore && (
         <RootStoreProvider value={rootStore}>
-          <UserContext.Provider value={userData}>
-            <Navbar />
-            <Component {...pageProps} />
-            <Toaster />
-            <Background />
-          </UserContext.Provider>
+          <Navbar />
+          <Component {...pageProps} />
+          <Toaster />
+          <Background />
         </RootStoreProvider>
       )}
     </>

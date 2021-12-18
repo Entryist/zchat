@@ -1,12 +1,7 @@
-import { auth, GeoFirestore, GeoPoint, serverTimestamp } from '@lib/firebase'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
 import { useStores } from '@lib/root-store-context'
-import { signInWithTwitter } from '@lib/twitter'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { useContext } from 'react'
-import { UserContext } from '@lib/context'
 
 export default function PostBox() {
   const publicKey = useStores().publicKey

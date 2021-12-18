@@ -16,6 +16,7 @@ export const login = async (self: RootStore) => {
   console.log('privatekey:', privatekey)
   const publickey = getPublicKey(privatekey)
   console.log('publickey:', publickey)
+  // @ts-ignore
   self.setPublicKey(publickey)
   self.setPrivateKey(privatekey)
 }
