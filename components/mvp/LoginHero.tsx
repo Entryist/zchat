@@ -3,7 +3,7 @@ import { useStores } from '@lib/root-store-context'
 import { observer } from 'mobx-react-lite'
 
 function LoginHero() {
-  const [buttonText, setButtonText] = useState('Log in with key')
+  const [buttonText, setButtonText] = useState('Create account')
   const login = useStores().login
   const publicKey = useStores().publicKey
 
@@ -34,6 +34,12 @@ function LoginHero() {
               )}
             </div>
           </div>
+
+          <p className='text-gray-500 mt-6 underline'>
+            <a href='https://github.com/entryist/zchat' target='_blank'>
+              See code on GitHub
+            </a>
+          </p>
         </div>
       </main>
     </div>

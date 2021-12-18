@@ -39,7 +39,6 @@ function Navbar() {
     setPublicKey('')
     setPrivateKey('')
     reset()
-    pool.unsub()
     storage.removeItem(ROOT_STATE_STORAGE_KEY)
     console.log('logged out')
   }
