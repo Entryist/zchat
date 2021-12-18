@@ -36,7 +36,7 @@ function LoginHero() {
           </div>
 
           <p className='text-gray-500 mt-6 underline'>
-            <a href='https://github.com/entryist/zchat' target='_blank'>
+            <a href='https://github.com/entryist/zchat' target='_blank' rel='noreferrer'>
               See code on GitHub
             </a>
           </p>
