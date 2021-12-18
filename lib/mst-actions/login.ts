@@ -16,6 +16,8 @@ export const login = async (self: RootStore) => {
   console.log('privatekey:', privatekey)
   const publickey = getPublicKey(privatekey)
   console.log('publickey:', publickey)
+  self.setPublicKey(publickey)
+  self.setPrivateKey(privatekey)
 }
 
 export const getPublicKey = (privateKey) => secp256k1.schnorr.getPublicKey(privateKey)

@@ -9,46 +9,25 @@ const Tron =
 
 export const ROOT_STATE_STORAGE_KEY = 'root7'
 
-export const TwitterMetadataModel = types.model({
-  email: '',
-  emailVerified: false,
-  locale: '',
-  name: '',
-  preferredUsername: '',
-  profile: '',
-  sub: '',
-})
-
-export const GeolocationModel = types.model({
-  latitude: 0.0,
-  countryCode: '',
-  longitude: 0.0,
-  city: '',
-})
-
-export const PostModel = types.model({
-  id: types.identifier,
-  content: types.optional(types.string, ''),
-  geolocation: GeolocationModel,
-  twitterMetadata: types.maybeNull(TwitterMetadataModel),
-  createdAt: types.number,
-})
-
 export const RootStoreModel = types
   .model({
+    publicKey: '',
+    privateKey: '',
     city: types.maybeNull(types.string),
     coords: types.frozen(),
     countryCode: types.maybeNull(types.string),
-    posts: types.map(PostModel),
-    user: types.maybeNull(TwitterMetadataModel),
     showFeed: false,
   })
   .actions((self) => ({
     login: async (): Promise<void> => await actions.login(self as RootStore),
-    seeNearby: async (): Promise<void> => await actions.seeNearby(self as RootStore),
-    addPost(post: Post) {
-      self.posts.set(post.id, PostModel.create(post))
+    setPublicKey(key: string) {
+      self.publicKey = key
     },
+    setPrivateKey(key: string) {
+      self.privateKey = key
+    },
+
+    seeNearby: async (): Promise<void> => await actions.seeNearby(self as RootStore),
     setCity(city: string) {
       self.city = city
     },
@@ -65,19 +44,20 @@ export const RootStoreModel = types
       self.user = user
     },
     reset() {
-      self.user = null
+      // self.user = null
       // self.city = null
       // self.coords = null
       // self.countryCode = null
-      self.posts = undefined
+      // self.posts = undefined
     },
   }))
   .views((self) => ({
     get postsArray(): Post[] {
-      const posts = Array.from(self.posts.values())
-      return posts
-        .filter((p) => !!p.twitterMetadata)
-        .sort((p1, p2) => (p1.createdAt > p2.createdAt ? -1 : 1))
+      return []
+      // const posts = Array.from(self.posts.values())
+      // return posts
+      //   .filter((p) => !!p.twitterMetadata)
+      //   .sort((p1, p2) => (p1.createdAt > p2.createdAt ? -1 : 1))
     },
   }))
 

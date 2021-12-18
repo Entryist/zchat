@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useStores } from '@lib/root-store-context'
+import { observer } from 'mobx-react-lite'
 
-export default function LoginHero() {
+function LoginHero() {
   const [buttonText, setButtonText] = useState('Log in with key')
   const login = useStores().login
+  const publicKey = useStores().publicKey
 
   return (
     <div className='fixed flex flex-col h-screen w-screen justify-center items-center'>
@@ -20,14 +22,15 @@ export default function LoginHero() {
           </p>
           <div className='mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8'>
             <div className='rounded-md shadow'>
-              <button
-                className='w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10'
-                onClick={login}
-              >
-                {buttonText}
-              </button>
-              {buttonText === 'Waiting for location...' && (
-                <p className='mt-4 text-gray-500'>This may take a few seconds</p>
+              {!!publicKey ? (
+                <p className='text-white'>{publicKey}</p>
+              ) : (
+                <button
+                  className='w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10'
+                  onClick={login}
+                >
+                  {buttonText}
+                </button>
               )}
             </div>
           </div>
@@ -36,3 +39,5 @@ export default function LoginHero() {
     </div>
   )
 }
+
+export default observer(LoginHero)

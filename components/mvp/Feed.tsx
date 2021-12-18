@@ -9,6 +9,7 @@ function Feed() {
   const [onboarded, setOnboarded] = useState(true)
   const posts = useStores().postsArray
   const city = useStores().city
+  const publickey = useStores().publicKey
 
   return (
     <>
@@ -21,13 +22,8 @@ function Feed() {
         >
           {posts.length === 0 && (
             <>
-              <p className='mb-4'>
-                There are no posts near <strong>{city}</strong>. You can make the first post!
-              </p>
-              <p className='mb-8'>
-                Introduce yourself and say if you are re looking to give or take rides, or any other
-                service.
-              </p>
+              <p className='mb-8'>Welcome {publickey}!</p>
+              <p className='mb-8'>Make a post!</p>
             </>
           )}
           <ul role='list' className='-mb-8'>
