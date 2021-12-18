@@ -10,7 +10,7 @@ export default function LoginHero() {
       <main className='mx-auto max-w-7xl px-4'>
         <div
           className='-mt-12 px-16 text-center rounded-xl h-96 flex flex-col justify-center'
-          style={{ backgroundColor: 'rgba(0,0,0,0.85)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.9)' }}
         >
           <h1 className='text-4xl tracking-tight font-extrabold text-gray-100 sm:text-5xl md:text-6xl'>
             <span className='block xl:inline'>Speak Freely.</span>

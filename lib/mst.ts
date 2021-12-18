@@ -44,6 +44,7 @@ export const RootStoreModel = types
     showFeed: false,
   })
   .actions((self) => ({
+    login: async (): Promise<void> => await actions.login(self as RootStore),
     seeNearby: async (): Promise<void> => await actions.seeNearby(self as RootStore),
     addPost(post: Post) {
       self.posts.set(post.id, PostModel.create(post))
