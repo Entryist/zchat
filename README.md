@@ -1,1 +1,3 @@
-https://twitter.com/ArcadeCityHall/status/1470392372995444748
+## Minimum viable Nostr client
+
+![Nostr client](https://github.com/Entryist/zchat/blob/main/public/mvn.png)

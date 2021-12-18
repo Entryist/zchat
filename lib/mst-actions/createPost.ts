@@ -1,5 +1,5 @@
 import { RootStore } from '@lib/mst'
-import { encrypt, decrypt } from '@lib/nip04'
+import { encrypt } from '@lib/nip04'
 import { pool } from '@lib/nostr'
 import { getEventHash } from 'nostr-tools'
 

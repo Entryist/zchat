@@ -13,22 +13,6 @@ export function encrypt(privkey, pubkey, text) {
   return [encryptedMessage, Buffer.from(iv.buffer).toString('base64')]
 }
 
-export function decrypt(privkey, pubkey, ciphertext, iv) {
-  const key = secp.getSharedSecret(privkey, '02' + pubkey)
-  const normalizedKey = getOnlyXFromFullSharedSecret(key)
-
-  var decipher = crypto.createDecipheriv(
-    'aes-256-cbc',
-    Buffer.from(normalizedKey, 'hex'),
-    Buffer.from(iv, 'base64')
-  )
-  let decryptedMessage = decipher.update(ciphertext, 'base64')
-  // @ts-ignore
-  decryptedMessage += decipher.final('utf8')
-
-  return decryptedMessage
-}
-
 function getOnlyXFromFullSharedSecret(fullSharedSecretCoordinates) {
   return fullSharedSecretCoordinates.substr(2, 64)
 }

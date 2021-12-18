@@ -1,28 +1,17 @@
+import { observer } from 'mobx-react-lite'
 import PostBox from '@components/mvp/PostBox'
 import FollowBox from '@components/mvp/FollowBox'
 import { useStores } from '@lib/root-store-context'
-import { useState } from 'react'
-import Onboarding from './Onboarding'
 import Post from './Post'
-import { observer } from 'mobx-react-lite'
-import { values } from 'mobx'
 
 function Feed() {
-  const [onboarded, setOnboarded] = useState(true)
   const posts = useStores().postsArray
-  // console.log('posts:', posts)
-  const city = useStores().city
   const publickey = useStores().publicKey
-  // const events = useStores().events
-  // const posts = events ? values(events) : []
-  // console.log('posts:', posts)
-
   return (
     <>
       <div className='flex justify-center flex-col items-center'>
         <FollowBox />
-        {onboarded ? <PostBox /> : <Onboarding />}
-
+        <PostBox />
         <div
           className='flow-root p-8 m-8 rounded-xl w-full max-w-xl'
           style={{ backgroundColor: 'rgba(255,255,255,1)' }}
